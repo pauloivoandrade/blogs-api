@@ -1,7 +1,5 @@
-const { date } = require("joi");
-
 module.exports = (sequelize, DataTypes) => {
-    const Blog_posts = sequelize.define(
+    const BlogPost = sequelize.define(
         'blog_posts',
         {
             id: { type: DataTypes.INTEGER, primaryKey: true },
@@ -23,20 +21,13 @@ module.exports = (sequelize, DataTypes) => {
         },
     );
     
-    Blog_posts.associate = (models) => {
-        models.Blog_posts.belongsToMany(models.Category, {
-            as: 'categories',
-            through: models.Post_category,
-            foreignKey: 'post_id',
-            otherKey: 'category_id',
-        });
-        models.Category.belongsToMany(models.Blog_posts, {
-            as: 'blog_posts',
-            through: models.Post_category,
-            foreignKey: 'category_id',
-            otherKey: 'post_id',
+    BlogPost.associate = (models) => {
+        models.User.belongsTo(models.User, {
+            through: models.BlogPost,
+            foreignKey: 'id',
+            as: 'user',
         });
     };
 
-    return Blog_posts;
+    return BlogPost;
 };

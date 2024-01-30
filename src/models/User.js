@@ -1,6 +1,4 @@
-const { date } = require("joi")
-
-module.exports = (sequelize, DataTypes) => {
+const User = (sequelize, DataTypes) => {
     const User = sequelize.define(
         'User',
         {
@@ -17,3 +15,4 @@ module.exports = (sequelize, DataTypes) => {
     );
     return User;
 }
+module.exports = User;
