@@ -2,7 +2,7 @@ const { date } = require("joi")
 
 module.exports = (sequelize, DataTypes) => {
     const Category = sequelize.define(
-        'categories',
+        'Category',
         {
             id: { type: DataTypes.INTEGER, primaryKey: true },
             name: { type: DataTypes.STRING },
