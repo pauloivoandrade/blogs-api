@@ -29,7 +29,22 @@ const getUser = async () => {
   return { status: 200, data: getUsers };
 };
 
+const getById = async (id) => {
+  const getUserId = await User.findByPk(
+    id,
+    {
+      attributes: { exclude: ['password'] },
+    },
+  );
+  console.log('OLHA EU AQUI', id);
+  if (!getUserId) {
+    return { status: 404, data: { message: 'User does not exist' } };
+  }
+  return { status: 200, data: getUserId };
+};
+
 module.exports = {
   addUser,
   getUser,
+  getById,
 };

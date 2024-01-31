@@ -9,7 +9,6 @@ const validateToken = (req, res, next) => {
     return res.status(401).json({ message: 'Token not found' });
   } 
   const token = bearerToken.split(' ')[1];
-  console.log('OLHA EU QUI', token);
 
   JWT.verify(token, JWT_SECRET, (err) => {
     if (err) {
