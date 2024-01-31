@@ -22,4 +22,14 @@ const addUser = async (displayName, email, password, image) => {
   return { status: 201, data: { token } };
 };
 
-module.exports = addUser;
+const getUser = async () => {
+  const getUsers = await User.findAll({
+    attributes: { exclude: ['password'] },
+  });
+  return { status: 200, data: getUsers };
+};
+
+module.exports = {
+  addUser,
+  getUser,
+};

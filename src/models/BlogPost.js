@@ -20,11 +20,10 @@ module.exports = (sequelize, DataTypes) => {
             underscored: true,
         },
     );
-    
+
     BlogPost.associate = (models) => {
-        models.User.belongsTo(models.User, {
-            through: models.BlogPost,
-            foreignKey: 'id',
+        BlogPost.belongsTo(models.User, {
+            foreignKey: 'user_id',
             as: 'user',
         });
     };
