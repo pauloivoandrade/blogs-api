@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { BlogPost, PostCategory, Category } = require('../models');
+const { BlogPost, PostCategory, Category, User } = require('../models');
 
 const config = require('../config/config');
 
@@ -27,6 +27,15 @@ const addPost = async ({ title, content, categoryIds, userId }) => {
   return result;
 };
 
+const getPost = async () => {
+  const getPosts = await BlogPost.findAll({ include: [
+    { model: User, as: 'user', attributes: { exclude: ['password'] } },
+    { model: Category, as: 'categories', through: { attributes: [] } },
+  ] });
+  return { status: 200, data: getPosts };
+};
+
 module.exports = {
   addPost,
+  getPost,
 };
