@@ -6,7 +6,7 @@ const route = Router();
 
 route.post('/', validateToken, post.addNewPost);
 route.get('/', validateToken, post.getUsers);
-// route.get('/:id', validateToken, user.getUserById);
+route.get('/:id', validateToken, post.getById);
 
 module.exports = {
   route,
