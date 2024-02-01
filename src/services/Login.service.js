@@ -6,8 +6,8 @@ console.log(User);
 const login = async (email, password) => {
   const user = await User.findOne({ where: { email, password } });
   if (!user) return null;
-
-  return JWT.sign({ data: email }, JWT_SECRET, { expiresIn: '15d' });
+  console.log('USER = ', user);
+  return JWT.sign({ data: email, id: user.id }, JWT_SECRET, { expiresIn: '15d' });
 };
 
 module.exports = login;

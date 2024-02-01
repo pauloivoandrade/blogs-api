@@ -8,12 +8,16 @@ const validateToken = (req, res, next) => {
   if (!bearerToken) {
     return res.status(401).json({ message: 'Token not found' });
   } 
-  const token = bearerToken.split(' ')[1];
 
-  JWT.verify(token, JWT_SECRET, (err) => {
+  const token = bearerToken.split(' ')[1];
+  
+  JWT.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
       return res.status(401).json({ message: 'Expired or invalid token' });
     }
+    
+    req.user = decoded;
+
     next();
   });
 };
