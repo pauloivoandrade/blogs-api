@@ -5,10 +5,8 @@ const config = require('../config/config');
 
 const env = process.env.NODE_ENV || 'development';
 const sequelize = new Sequelize(config[env]);
-
 const addPost = async ({ title, content, categoryIds, userId }) => {
   const categories = await Category.findAll({ where: { id: categoryIds } });
-  console.log('CATEGORIAS = ', categories);
   if (categories.length !== categoryIds.length) {
     return { status: 400, data: { message: 'one or more "categoryIds" not found' } };
   }
@@ -17,7 +15,6 @@ const addPost = async ({ title, content, categoryIds, userId }) => {
     const postCategories = categories
       .map((category) => ({ postId: newPost.id, categoryId: category.id,
       }));
-    console.log(newPost);
     await PostCategory.bulkCreate(postCategories, { transaction: t });
     return {
       status: 201,
@@ -26,7 +23,6 @@ const addPost = async ({ title, content, categoryIds, userId }) => {
   });
   return result;
 };
-
 const getPost = async () => {
   const getPosts = await BlogPost.findAll({ include: [
     { model: User, as: 'user', attributes: { exclude: ['password'] } },
@@ -34,7 +30,6 @@ const getPost = async () => {
   ] });
   return { status: 200, data: getPosts };
 };
-
 const getPostById = async (id) => {
   const getPostId = await BlogPost.findByPk(
     id,
@@ -43,15 +38,28 @@ const getPostById = async (id) => {
       { model: Category, as: 'categories', through: { attributes: [] } },
     ] },
   );
-  console.log('OLHA EU AQUI', id);
   if (!getPostId) {
     return { status: 404, data: { message: 'Post does not exist' } };
   }
   return { status: 200, data: getPostId };
 };
+const updatePost = async (id, userId, postData) => {
+  const getPostId = await BlogPost.findByPk(id, { include: [
+    { model: User, as: 'user', attributes: { exclude: ['password'] } },
+    { model: Category, as: 'categories', through: { attributes: [] } },
+  ] });
 
+  if (userId !== getPostId
+    .user.dataValues.id) return { status: 401, data: { message: 'Unauthorized user' } };
+  console.log('OLHA O LOG AQUI = ', getPostId.user.dataValues.id, userId);
+
+  const { title, content } = postData;
+  await getPostId.update({ title, content });
+  return { status: 200, data: getPostId };
+};
 module.exports = {
   addPost,
   getPost,
   getPostById,
+  updatePost,
 };

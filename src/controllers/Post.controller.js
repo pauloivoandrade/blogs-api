@@ -1,4 +1,4 @@
-const { addPost, getPost, getPostById } = require('../services/Post.service');
+const { addPost, getPost, getPostById, updatePost } = require('../services/Post.service');
 
 const addNewPost = async (req, res) => {
   const userId = req.user.id;
@@ -27,9 +27,23 @@ const getById = async (req, res) => {
 
   return res.status(status).json(data);
 };
+async function updateIdPost(req, res) {
+  const { id: userId } = req.user;
+  const { title, content } = req.body;
+  const { id } = req.params;
+  if (!title || !content) {
+    return res.status(400).json({ message: 'Some required fields are missing' });
+  }
+
+  const updatedPost = await updatePost(id, userId, req.body);
+
+  res.status(updatedPost.status).json(updatedPost.data);
+}
 
 module.exports = {
   addNewPost,
   getUsers,
   getById,
+  updatePost,
+  updateIdPost,
 };
