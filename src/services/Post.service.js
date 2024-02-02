@@ -16,10 +16,7 @@ const addPost = async ({ title, content, categoryIds, userId }) => {
       .map((category) => ({ postId: newPost.id, categoryId: category.id,
       }));
     await PostCategory.bulkCreate(postCategories, { transaction: t });
-    return {
-      status: 201,
-      data: newPost,
-    };
+    return { status: 201, data: newPost };
   });
   return result;
 };
@@ -48,11 +45,9 @@ const updatePost = async (id, userId, postData) => {
     { model: User, as: 'user', attributes: { exclude: ['password'] } },
     { model: Category, as: 'categories', through: { attributes: [] } },
   ] });
-
   if (userId !== getPostId
     .user.dataValues.id) return { status: 401, data: { message: 'Unauthorized user' } };
   console.log('OLHA O LOG AQUI = ', getPostId.user.dataValues.id, userId);
-
   const { title, content } = postData;
   await getPostId.update({ title, content });
   return { status: 200, data: getPostId };
